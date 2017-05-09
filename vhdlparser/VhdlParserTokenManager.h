@@ -127,7 +127,8 @@ void  TokenLexicalActions(Token *matchedToken);
   JAVACC_STRING_TYPE        image;
   int                       jjimageLen;
   int                       lengthOfMatch;
-  JAVACC_CHAR_TYPE          curChar;
+  //JAVACC_CHAR_TYPE          curChar;
+  unsigned char             curChar;
   TokenManagerErrorHandler* errorHandler;
   bool                      errorHandlerCreated;
 
