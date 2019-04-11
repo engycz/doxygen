@@ -2058,12 +2058,16 @@ void VhdlDocGen::writeVHDLDeclaration(MemberDef* mdef,OutputList &ol,
       break;
     case VhdlDocGen::USE:
       kl=VhdlDocGen::getClass(mdef->name());
-      if (kl && ((VhdlDocGen::VhdlClasses)kl->protection()==VhdlDocGen::ENTITYCLASS)) break;
+      printf("======= %s %p", mdef->name().data(), kl);
+      if (kl)
+          printf(" - %d", kl->protection());
+      printf("\n");
+      //if (kl && ((VhdlDocGen::VhdlClasses)kl->protection()==VhdlDocGen::ENTITYCLASS)) break;
       writeLink(mdef,ol);
       ol.insertMemberAlign();
       ol.docify("  ");
 
-      if (kl)
+      if (kl && ((VhdlDocGen::VhdlClasses)kl->protection() == VhdlDocGen::PACKAGECLASS))
       {
         nn=kl->getOutputFileBase();
         ol.pushGeneratorState();
@@ -2078,6 +2082,22 @@ void VhdlDocGen::writeVHDLDeclaration(MemberDef* mdef,OutputList &ol,
         ol.startEmphasis();
         ol.writeObjectLink(kl->getReference(),kl->getOutputFileBase(),0,name.data());
         ol.popGeneratorState();
+      }
+      if (kl && ((VhdlDocGen::VhdlClasses)kl->protection() == VhdlDocGen::ENTITYCLASS))
+      {
+          nn = kl->getOutputFileBase();
+          ol.pushGeneratorState();
+          ol.disableAllBut(OutputGenerator::Html);
+          ol.docify(" ");
+          QCString name = "Entity";// theTranslator_vhdlType(VhdlDocGen::PACKAGE, TRUE);
+          ol.startBold();
+          ol.docify(name.data());
+          name.resize(0);
+          ol.endBold();
+          name += " <" + mdef->name() + ">";
+          ol.startEmphasis();
+          ol.writeObjectLink(kl->getReference(), kl->getOutputFileBase(), 0, name.data());
+          ol.popGeneratorState();
       }
       break;
     case VhdlDocGen::LIBRARY:
